@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Book;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Access\Response;
 
 class BookPolicy
@@ -37,7 +38,11 @@ class BookPolicy
      */
     public function update(User $user, Book $book): bool
     {
-        //
+        if (!($user->role == 'admin' || $user->id == $book->user_id)) {
+            throw new AuthorizationException("Only admin and the owner can update.", 403);
+            return false;
+        };
+        return true;
     }
 
     /**
@@ -45,7 +50,11 @@ class BookPolicy
      */
     public function delete(User $user, Book $book): bool
     {
-        //
+        if (!($user->role == 'admin' || $user->id == $book->user_id)) {
+            throw new AuthorizationException("Only admin and the owner can delete.", 403);
+            return false;
+        };
+        return true;
     }
 
     /**

@@ -23,14 +23,17 @@ class ReviewController extends Controller
     public function store(StoreReviewRequest $request)
     {
         $book_id = $request->book_id;
-        $review = $request->review;
+        $review_text = $request->review_text;
         Review::insert([
             'book_id' => $book_id,
-            'review' => $review,
+            'review_text' => $review_text,
             'user_id' => Auth::id(),
             'created_at' => now(),
             'updated_at' => now()
 
+        ]);
+        return response()->json([
+            "message" => "You have gived  review successfully ."
         ]);
     }
 
@@ -47,7 +50,15 @@ class ReviewController extends Controller
      */
     public function update(UpdateReviewRequest $request, Review $review)
     {
-        //
+        //system admin and review owner can update
+
+        $this->authorize('update', $review);
+
+        $review->review_text = $request->review_text;
+        $review->update();
+        return response()->json([
+            "message" => "Review is updated successfuklly "
+        ]);
     }
 
     /**
@@ -55,6 +66,13 @@ class ReviewController extends Controller
      */
     public function destroy(Review $review)
     {
-        //
+
+        $this->authorize('delete', $review);
+        //system admin , book owner and review owner can delete
+
+        $review->delete();
+        return response()->json([
+            "message" => "Review is deleted successfuklly ."
+        ]);
     }
 }

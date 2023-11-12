@@ -19,9 +19,8 @@ return new class extends Migration
             $table->string('url');
             $table->string('extension');
             $table->string('file_size');
-            $table->integer('rating_count')->default(0);
-            // $table->integer('rating');
-            $table->foreignId('user_id');
+
+            $table->foreignId('user_id')->onDelete('cascade');;
             $table->timestamps();
         });
     }

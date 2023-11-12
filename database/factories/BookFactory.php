@@ -2,6 +2,12 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +22,27 @@ class BookFactory extends Factory
      */
     public function definition(): array
     {
+        $rand = rand(10, 99);
+        $content = fake()->text();
+        $folderPath = 'public/books/';
+
+
+        $filePath =   $folderPath . Str::uuid()->toString() . '.pdf';;
+
+        Storage::put($filePath, $content);
+
+        $randomUser = User::inRandomOrder()->first();
+        $fileSize = Storage::size($filePath);
+
+
         return [
-            //
+            'title' => basename($filePath),
+            'description' => "this is test file ",
+            'url' => asset(Storage::url($filePath)),
+            'extension' =>   File::extension($filePath),
+            'file_size' =>  $fileSize,
+            'user_id' => $randomUser->id,
+
         ];
     }
 }

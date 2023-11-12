@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Models\Book;
 use App\Models\Review;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Access\Response;
 
 class ReviewPolicy
@@ -37,7 +39,11 @@ class ReviewPolicy
      */
     public function update(User $user, Review $review): bool
     {
-        //
+        if (!($user->role == 'admin' || $user->id == $review->user_id)) {
+            throw new AuthorizationException("Only admin and the review owner can update.", 403);
+            return false;
+        };
+        return true;
     }
 
     /**
@@ -45,7 +51,11 @@ class ReviewPolicy
      */
     public function delete(User $user, Review $review): bool
     {
-        //
+        if (!($user->role == 'admin' || $user->id == $review->user_id || $user->id ==  $review->book->user_id)) {
+            throw new AuthorizationException("Only admin , the book owner and the review owner can delete.", 403);
+            return false;
+        };
+        return true;
     }
 
     /**

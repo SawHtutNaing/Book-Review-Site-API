@@ -47,10 +47,6 @@ class BookController extends Controller
     public function show(Book $book)
     {
         return new BookResource($book);
-        // return $book->reviews;
-        // return $book->total_rating();
-        // dd($book->total_rating());
-        // dd($book->total_people());
     }
 
     /**
@@ -66,6 +62,11 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $this->authorize('delete', $book);
+        $book->delete();
+        // return Auth::user()->role;
+        return response()->json([
+            "message" => "Deleted successfully",
+        ]);
     }
 }

@@ -27,21 +27,18 @@ class RatingController extends Controller
     {
         $book_id = $request->book_id;
         $rating = $request->rating;
+
         $book = Book::findOrFail($book_id);
         //book owner can not rate his book to get real reaction
-        if (!Gate::allows('update-post', $book)) {
+        if (Gate::allows('feedback-book', $book)) {
             return response()->json([
                 "message" => "You can not rate your book yourself"
             ]);
         }
 
 
-        // to prevent from rating twice
-        if (Rating::where('user_id', Auth::id())->where('book_id', $book_id)->firstOrFail()) {
-            return response()->json([
-                "message" => "You already have been rated"
-            ]);
-        };
+
+
         $rate =   Rating::insert(
             [
                 'book_id' => $book_id,
@@ -52,7 +49,9 @@ class RatingController extends Controller
 
             ]
         );
-        return $rate;
+        return response()->json([
+            "message" => "You have rated successfully",
+        ]);
     }
 
     /**

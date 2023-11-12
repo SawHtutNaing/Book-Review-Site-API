@@ -21,11 +21,11 @@ class BookResource extends JsonResource
             'title' => $this->title,
             'url' => $this->url,
             'extension' => $this->extension,
-            'file_size' => $this->filesize,
+            'file_size' => $this->file_size,
             'description' => $this->description,
             'rated_people' => $ratedPeople,
             'total_rating' => $totalRating,
-            'average_rating' => ($totalRating / $ratedPeople),
+            'average_rating' => ($ratedPeople > 0) ? ($totalRating / $ratedPeople) : 0,
             'reviews' => $this->reviews
         ];
     }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests;
 
-// use Illuminate\Validation\Validator;
+use App\Rules\UniqueUserBookRating;
+
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Foundation\Http\FormRequest;
 
-
-class StoreReviewRequest extends FormRequest
+class StoreFeedbackRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,14 +26,22 @@ class StoreReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'book_id' => "required|integer|exists:books,id",
-            'review_text' => "required|string|max:1000|min:10"
+            'book_id' => [
+                'required',
+                'integer',
+                'exists:books,id'
+            ],
+            'review_text' => "string|max:1000|min:10",
+            'rating' => [
+                'max:100', 'min:0',
+                new UniqueUserBookRating($this->input('book_id')),
+
+            ]
+
+
 
         ];
     }
-
-
-
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(

@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueUserBookRating;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreRatingRequest extends FormRequest
 {
@@ -22,8 +25,29 @@ class StoreRatingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'book_id' => 'required|integer',
-            'rating' => 'required|max:100|min:0'
+            'book_id' => [
+                'required',
+                'integer',
+                'exists:books,id'
+                // new UniqueUserBookRating($this->input('book_id')),
+            ],
+            'rating' => [
+                'max:100', 'min:0',
+
+                new UniqueUserBookRating($this->input('book_id')), // to prevent from rating twice
+
+            ]
+
+
         ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422)
+        );
     }
 }
