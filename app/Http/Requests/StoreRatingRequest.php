@@ -29,7 +29,7 @@ class StoreRatingRequest extends FormRequest
                 'required',
                 'integer',
                 'exists:books,id'
-                // new UniqueUserBookRating($this->input('book_id')),
+
             ],
             'rating' => [
                 'max:100', 'min:0',

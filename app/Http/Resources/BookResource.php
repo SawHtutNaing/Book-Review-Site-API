@@ -25,7 +25,7 @@ class BookResource extends JsonResource
             'description' => $this->description,
             'rated_people' => $ratedPeople,
             'total_rating' => $totalRating,
-            'average_rating' => ($ratedPeople > 0) ? ($totalRating / $ratedPeople) : 0,
+            'average_rating' => ($ratedPeople > 0) ? round(($totalRating / $ratedPeople)) : 0,
             'reviews' => $this->reviews
         ];
     }

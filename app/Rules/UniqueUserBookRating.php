@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+
 use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
 

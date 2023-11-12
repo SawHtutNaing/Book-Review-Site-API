@@ -4,6 +4,10 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
+
 class StoreBookRequest extends FormRequest
 {
     /**
@@ -23,8 +27,19 @@ class StoreBookRequest extends FormRequest
     {
         return [
             'book' => 'required|file|max:20480|mimes:pdf,epub,txt,doc,docx,xls,xlsx',
-            'description' => 'required|string|max:50|min:4',
+            'description' => 'required|string|max:50|min:4'
 
         ];
+    }
+
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422)
+        );
     }
 }
