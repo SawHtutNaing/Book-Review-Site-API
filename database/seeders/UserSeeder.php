@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
     {
 
 
-        // User::create($arr);
+
         User::upsert(
 
             [

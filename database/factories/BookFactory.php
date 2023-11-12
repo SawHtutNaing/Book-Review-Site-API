@@ -22,14 +22,16 @@ class BookFactory extends Factory
      */
     public function definition(): array
     {
-        $rand = rand(10, 99);
+
         $content = fake()->text();
         $folderPath = 'public/books/';
 
 
         $filePath =   $folderPath . Str::uuid()->toString() . '.pdf';;
 
-        Storage::put($filePath, $content);
+        // Storage::put($filePath, $content);
+        Storage::put($filePath, $content, 'public', ['mimetype' => 'application/pdf']);
+
 
         $randomUser = User::inRandomOrder()->first();
         $fileSize = Storage::size($filePath);

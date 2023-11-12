@@ -20,7 +20,7 @@ class LoginCheck
             // User is logged in
             $user = Auth::user(); // Get the logged-in user
             return response()->json([
-                "message" => "You are currently login in as . $user->name"
+                "message" => "You are currently login in with User name  $user->name"
             ]);
         } else {
             return $next($request);

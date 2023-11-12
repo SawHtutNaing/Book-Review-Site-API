@@ -24,7 +24,7 @@ class ReviewFactory extends Factory
         return [
             'book_id' => $randomBook,
             'review_text' => fake()->text(),
-            'user_id' => $randomUser->id,
+            'user_id' => $randomUser->id
 
         ];
     }
